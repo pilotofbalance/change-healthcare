@@ -1,0 +1,22 @@
+paths:
+  /logs:
+    post:
+      summary: Write logs.
+      description: Writing logs from API.
+      tags:
+        - Client
+      requestBody:
+        content:
+          application/json:
+            schema:      
+              type: object
+      responses:
+        '200':    
+          description: array of numbers
+          content:
+            application/json:
+              schema: 
+                type: object
+tags:
+  - name: Client
+    description: the only available api here

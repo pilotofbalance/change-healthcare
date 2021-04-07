@@ -1,0 +1,44 @@
+version: "3.7"
+
+services:
+  client-arrays-service:
+    build:
+      context: ./client-arrays-service
+      dockerfile: Dockerfile
+    container_name: client-arrays-service
+    environment:
+      - LOG_SERVICE=http://log-service:3002
+      - UI_CLIENT_SERVICE=http://localhost
+    ports:
+      - "3001:3001"
+    restart: "unless-stopped"
+    networks:
+      - resolute
+  log-service:
+    build:
+      context: ./log-service/
+      dockerfile: Dockerfile
+    container_name: log-service
+    ports:
+      - "3002:3002"
+    restart: "unless-stopped"
+    environment:
+      - LOG_DIRECTORY=/../logs
+    volumes:
+      - "/home"
+    networks:
+      - resolute
+  ui-client:
+    build:
+      context: ./ui-client/.
+      dockerfile: Dockerfile
+    container_name: ui-client
+    ports:
+      - "80:80"
+    networks:
+      - resolute
+      
+networks:
+  resolute:
+    driver: bridge
+

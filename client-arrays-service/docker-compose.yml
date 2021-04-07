@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  client-arrays-service:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: client-arrays-service
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    restart: "unless-stopped"
+    networks:
+      - resolute
+
+networks:
+  resolute:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local

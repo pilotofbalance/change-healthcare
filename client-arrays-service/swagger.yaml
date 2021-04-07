@@ -1,0 +1,39 @@
+paths:
+  /arrays/{key}:
+    post:
+      summary: Returns a list of numbers.
+      description: Get array of numbers by key.
+      tags: 
+        - Client
+      parameters:
+        - name: key
+          in: path
+          required: true
+          description: The key of array list.
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+            maximum: 1000
+      responses:
+        '200':    
+          description: array of numbers
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties: 
+                  data: 
+                    type: object
+                    properties:
+                      key: 
+                        type: number
+                      value:
+                        type: array
+                        items: 
+                          type: number
+                  message:
+                    type: string
+tags:
+  - name: Client
+    description: the only available api here

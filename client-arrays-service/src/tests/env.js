@@ -1,0 +1,1 @@
+process.env.LOG_SERVICE = 'http://localhost:3002';
