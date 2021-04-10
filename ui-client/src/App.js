@@ -1,10 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 
 function App() {
   const [data, setData] = useState("");
   const [key, setKey] = useState("");
+  const [keyWs, setKeyWs] = useState("");
   const [valid, setValid] = useState(true);
+  const [validWs, setValidWs] = useState(true);
+  const ws = useRef(null);
+
+  useEffect(() => {
+    ws.current = new WebSocket("ws://localhost:3001/ws");
+    ws.current.onopen = () => {
+      console.log("ws opened");
+      // listen for changes
+      ws.current.onmessage = (e) => {
+        const { data } = e;
+        let message = "";
+        if(data) {
+          message = JSON.parse(data).value;
+        }
+        setData(message)
+      };
+    };
+    ws.current.onclose = () => console.log("ws closed");
+
+    return () => {
+      ws.current.close();
+    };
+  }, []);
 
   const onChange = (e) => {
     const { value } = e.target;
@@ -14,6 +38,22 @@ function App() {
     } else {
       setValid(false);
       setKey("");
+      setData("");
+    }
+  };
+
+  const onChangeWs = (e) => {
+    const { value } = e.target;
+    if (!ws.current) return;
+    if (isNumber(value) && isValidNumber(value)) {
+      setValidWs(true);
+      const trimmedValue = value.trim();
+      setKeyWs(trimmedValue);
+      ws.current.send(trimmedValue);
+    } else {
+      setValidWs(false);
+      setKeyWs("");
+      setData("");
     }
   };
 
@@ -50,7 +90,7 @@ function App() {
         .then((res) => res.json())
         .then(
           ({ data }) => {
-            setData(JSON.stringify(data.value));
+            setData(data.value);
           },
           (error) => {
             console.log("Ooops ", error);
@@ -64,7 +104,18 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <label>Home Assignment - ChangeHealtcare</label>
+        <h1>Home Assignment - ChangeHealtcare</h1>
+        <label>WebSocket Example</label>
+        <p>
+          <input
+            type="text"
+            placeholder="Input number from 1 to 1000"
+            value={keyWs}
+            onChange={onChangeWs}
+            className={validWs ? "" : "invalid"}
+          />
+        </p>
+        <label>Rest Example</label>
         <p>
           <input
             type="text"

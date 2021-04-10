@@ -10,7 +10,7 @@ describe('Testing Arrays Service', () => {
   describe('[POST] /arrays/:key', () => {
     it('response statusCode 200 / getArray', async () => {
       const arraysRoute = new ArraysRoute();
-      const app = new App([arraysRoute]);
+      const app = new App();
       return request(app.getServer()).post(`${arraysRoute.path}/5`).send().expect(200);
     });
   });

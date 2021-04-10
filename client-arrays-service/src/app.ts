@@ -12,14 +12,18 @@ import Routes from './interfaces/routes.interface';
 import errorMiddleware from './middlewares/error.middleware';
 import { logger, stream } from './utils/logger';
 import { seedArrayMapper } from './factory/arrays.factory';
+import ArraysRoute from './routes/arrays.route';
+import WsRoute from './routes/ws.route.ts';
 
 class App {
   public app: express.Application;
   public port: string | number;
   public env: string;
 
-  constructor(routes: Routes[]) {
-    this.app = express();
+  constructor() {
+    const { app } = expressWs(express());
+    const routes = [new ArraysRoute(), new WsRoute()];
+    this.app = app;
     this.port = process.env.PORT || 3001;
     this.env = process.env.NODE_ENV || 'development';
 
